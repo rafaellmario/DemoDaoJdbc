@@ -21,9 +21,17 @@ public class MainClassTwo {
 	  myList.stream().forEach(System.out::println);
 	  
 	  System.out.println("\n=== Test 3 : Department Insert ===");
-	  Department newDepartment = new Department(null,"TI");
-	  departmentDao.insert(newDepartment);
-	  System.out.println("Iserted! New department ID = "+newDepartment.getId());
+//	  Department newDepartment = new Department(null,"Human Resources");
+//	  departmentDao.insert(newDepartment);
+//	  System.out.println("Iserted! New department ID = "+newDepartment.getId());
+	  
+	  System.out.println("\n=== Test 4 : Department Update ===");
+	  department = departmentDao.findById(6);
+	  department.setName("Engineering");
+	  departmentDao.update(department);
+	  System.out.println("Update conpleted!");
+	  
+	  
 	  
 	HandleDatabase.closeConnection();		  
 	  
