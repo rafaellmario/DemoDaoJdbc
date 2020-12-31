@@ -1,5 +1,8 @@
 package application;
 
+import java.util.List;
+
+import db.HandleDatabase;
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
 import model.entities.Department;
@@ -13,9 +16,14 @@ public class MainClassTwo {
 	  Department department = departmentDao.findById(2);
 	  System.out.println(department);
 	  
+	  System.out.println("\n=== Test 1 : Department findById ===");
+	  List<Department> myList = departmentDao.findAll();
+	  myList.stream().forEach(System.out::println);
 	  
 	  
 	  
+	  
+	HandleDatabase.closeConnection();		  
 	  
   }
 }
