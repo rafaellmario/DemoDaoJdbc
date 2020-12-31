@@ -43,6 +43,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 				ResultSet result = state.getGeneratedKeys();
 				if(result.next()) 
 					obj.setId(result.getInt(1));
+				
 				HandleDatabase.closeResultSet(result);
 			}
 			else 
@@ -84,8 +85,21 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
-		
+		PreparedStatement state = null;
+		try {
+			state = this.conn.prepareStatement(
+					"DELETE FROM department WHERE Id = ?");
+			state.setInt(1, id);
+						
+			if(state.executeUpdate() == 0)
+				throw new DbException("Invalid Id");
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			HandleDatabase.closeStatement(state);
+		}
 	}
 
 	@Override
