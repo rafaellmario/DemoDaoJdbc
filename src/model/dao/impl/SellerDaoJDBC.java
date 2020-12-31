@@ -57,7 +57,7 @@ public class SellerDaoJDBC implements SellerDao{
 				 HandleDatabase.closeResultSet(result);
 			 }
 			 else
-				 throw new DbException("Unexpected error! No rows were affected!");
+				 throw new DbException("Unexpected error! No rows affected!");
 			 
 		}
 		catch(SQLException e) {
