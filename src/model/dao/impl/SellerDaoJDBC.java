@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DbException;
 import db.HandleDatabase;
@@ -73,6 +76,51 @@ public class SellerDaoJDBC implements SellerDao{
 	  }
 	}
 
+	@Override 
+	public List<Seller> findByDepartment(Department dep){
+		 PreparedStatement state = null;
+		  ResultSet result = null;
+		  
+		  try {
+			  state = conn.prepareStatement(
+					  "SELECT seller.*,department.Name as DepName "+
+					  "FROM seller INNER JOIN department "+
+					  "ON seller.DepartmentId = department.Id "+
+					  "WHERE DepartmentId = ? "+
+					  "ORDER BY Name ");
+			  
+			  state.setInt(1, dep.getId());
+			  result = state.executeQuery();
+			  
+			  List<Seller> list = new ArrayList<>();
+			  Map<Integer, Department> map = new HashMap<>();
+			  
+			  while(result.next()) {
+				  
+				  Department objDep = map.get(result.getInt("DepartmentId"));
+				  
+				  if(objDep == null) {
+					objDep = this.instantiateDepartment(result);
+					map.put(result.getInt("DepartmentId"), objDep);
+				  }
+					  
+				  Seller seller = this.instantiateSeller(result, objDep);
+				  list.add(seller);
+			  }
+			  
+			  return list;
+		  }
+		  catch(SQLException e) {
+			  throw new DbException(e.getMessage());
+		  }
+		  finally {
+			  HandleDatabase.closeStatement(state);
+			  HandleDatabase.closeResultSet(result);
+		  }
+		
+		
+	}
+	
 
 	@Override
 	public List<Seller> findAll() {
@@ -80,7 +128,7 @@ public class SellerDaoJDBC implements SellerDao{
 		return null;
 	}
 
-// Methods
+// Auxiliary Methods
 	private Department instantiateDepartment(ResultSet result) throws SQLException{
 	  Department dep = new Department();
 	  dep.setId(result.getInt("DepartmentId"));
